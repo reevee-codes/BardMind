@@ -1,4 +1,4 @@
-package Commands;
+package commands;
 
 import config.AppConfig;
 import exceptions.ConfigurationException;
@@ -45,6 +45,7 @@ public class CommandStorage {
         this.chatHandler = new ChatHandler(gptHandler, sessionManager);
     }
 
+    /** Routes an incoming message: lyrics lookup → active session → /start → static commands → unknown. */
     public void executeCommand(KaczmarskiBot bot, String message, long chatId) {
         if (bot == null) {
             throw new IllegalArgumentException("Bot cannot be null");
@@ -57,6 +58,11 @@ public class CommandStorage {
         String trimmedMessage = message.trim();
         logger.info("Received message: {} from chat: {}", trimmedMessage, chatId);
 
+        if (sessionManager.isActive(chatId)) {
+            chatHandler.handleActiveChat(bot, trimmedMessage, chatId);
+            return;
+        }
+
         String textRequest = handleTextRequest(trimmedMessage);
         if (textRequest != null) {
             try {
@@ -65,11 +71,6 @@ public class CommandStorage {
             } catch (Exception e) {
                 logger.error("Failed to send text request to chat {}: {}", chatId, e.getMessage(), e);
             }
-        }
-        
-        if (sessionManager.isActive(chatId)) {
-            chatHandler.handleActiveChat(bot, trimmedMessage, chatId);
-            return;
         }
         if (isStartCommand(trimmedMessage)) {
             chatHandler.startChatWithLLM(bot, chatId);

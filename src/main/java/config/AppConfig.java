@@ -4,6 +4,7 @@ public class AppConfig {
 
     public static final String EMBEDDINGS_JSON_PATH = System.getProperty("bardmind.embeddings", "embeddings.json");
     public static final String DATA_FOLDER_PATH = System.getProperty("bardmind.data", "data");
+    public static final String EMBEDDING_MODEL = "text-embedding-3-small";
     public static final String PRIMARY_MODEL = "gpt-4";
     public static final String FALLBACK_MODEL = "gpt-3.5-turbo";
     public static final double TEMPERATURE = 0.3;

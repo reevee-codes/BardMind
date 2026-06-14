@@ -1,6 +1,6 @@
 package handler;
 
-import Commands.CommandStorage;
+import commands.CommandStorage;
 import org.telegram.telegrambots.meta.api.objects.PhotoSize;
 import org.telegram.telegrambots.meta.api.objects.Update;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;

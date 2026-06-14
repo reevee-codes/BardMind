@@ -1,4 +1,4 @@
-package Commands;
+package commands;
 
 import java.util.Set;
 import java.util.concurrent.ConcurrentHashMap;

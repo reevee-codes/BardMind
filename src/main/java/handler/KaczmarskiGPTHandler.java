@@ -20,6 +20,7 @@ import java.util.concurrent.ConcurrentHashMap;
 public class KaczmarskiGPTHandler {
 
     private static final Logger logger = LoggerFactory.getLogger(KaczmarskiGPTHandler.class);
+    private static final int MAX_HISTORY_SIZE = 20;
 
     private final String systemPromptTemplate;
     private final OpenAiService openAiService;
@@ -78,6 +79,7 @@ public class KaczmarskiGPTHandler {
         return sb.toString();
     }
 
+    /** Processes a user message: fetches RAG context, builds chat history, calls GPT (with fallback), trims history. */
     public String processMessage(long chatId, String message) {
         if (message == null || message.trim().isEmpty()) {
             throw new IllegalArgumentException("Message cannot be null or empty");
@@ -89,18 +91,18 @@ public class KaczmarskiGPTHandler {
         } catch (IOException e) {
             logger.warn("Nie udało się pobrać kontekstu z RAG: {}", e.getMessage(), e);
         }
+
+        List<ChatMessage> messages = chatHistories.computeIfAbsent(chatId, k -> Collections.synchronizedList(new ArrayList<>()));
+        if (messages.isEmpty()) {
+            String formattedPrompt = String.format(systemPromptTemplate, formatLyricsForPrompt());
+            messages.add(new ChatMessage("system", formattedPrompt));
+        }
+        int snapshotSize = messages.size();
+
         try {
             String textRequest = handleTextRequest(message);
             if (textRequest != null) {
                 return textRequest;
-            }
-
-            List<ChatMessage> messages = chatHistories.computeIfAbsent(chatId, k -> Collections.synchronizedList(new ArrayList<>()))
-            ;
-
-            if (messages.isEmpty()) {
-                String formattedPrompt = String.format(systemPromptTemplate, formatLyricsForPrompt());
-                messages.add(new ChatMessage("system", formattedPrompt));
             }
 
             String userContent = context.isEmpty() ? message : context + "\n\n" + message;
@@ -119,6 +121,7 @@ public class KaczmarskiGPTHandler {
                 ChatMessage response = openAiService.createChatCompletion(completionRequest)
                         .getChoices().get(0).getMessage();
                 messages.add(response);
+                trimHistory(messages);
                 return response.getContent();
             } catch (Exception e) {
                 logger.warn("Falling back to GPT-3.5-turbo due to: {}", e.getMessage(), e);
@@ -135,12 +138,21 @@ public class KaczmarskiGPTHandler {
                 ChatMessage response = openAiService.createChatCompletion(fallbackRequest)
                         .getChoices().get(0).getMessage();
                 messages.add(response);
+                trimHistory(messages);
                 return response.getContent();
             }
 
         } catch (Exception e) {
             logger.error("Error processing message for chatId {}: {}", chatId, e.getMessage(), e);
+            while (messages.size() > snapshotSize) messages.remove(messages.size() - 1);
             return "Przepraszam, coś poszło nie tak. Może rozpocznijmy rozmowę od nowa?";
+        }
+    }
+
+    private void trimHistory(List<ChatMessage> messages) {
+        // keep system message (index 0) + last MAX_HISTORY_SIZE-1 entries
+        while (messages.size() > MAX_HISTORY_SIZE) {
+            messages.remove(1);
         }
     }
 
@@ -201,6 +213,7 @@ public class KaczmarskiGPTHandler {
         return availableSongs.toString();
     }
 
+    // TODO: primitive rule-based lemmatization — may produce false positives for ambiguous suffixes
     private String getBaseForm(String word) {
         String base = word.toLowerCase();
 

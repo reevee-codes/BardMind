@@ -1,4 +1,4 @@
-package Commands;
+package commands;
 
 import handler.KaczmarskiBot;
 import org.telegram.telegrambots.meta.exceptions.TelegramApiException;

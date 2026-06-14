@@ -1,11 +1,11 @@
-package Commands;
+package commands;
 
 import utils.PropertiesLoader;
 import java.text.MessageFormat;
 import java.util.Properties;
 
 public class MessageProvider {
-    private static MessageProvider instance;
+    private static final MessageProvider INSTANCE = new MessageProvider();
     private final Properties messages;
 
     private MessageProvider() {
@@ -13,10 +13,7 @@ public class MessageProvider {
     }
 
     public static MessageProvider getInstance() {
-        if (instance == null) {
-            instance = new MessageProvider();
-        }
-        return instance;
+        return INSTANCE;
     }
 
     public String getMessage(String key) {

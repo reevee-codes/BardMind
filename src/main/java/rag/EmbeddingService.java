@@ -1,6 +1,7 @@
 package rag;
 
 import com.google.gson.*;
+import config.AppConfig;
 import okhttp3.*;
 import java.io.IOException;
 import java.util.List;
@@ -30,7 +31,7 @@ public class EmbeddingService implements IEmbeddingService {
             throw new IllegalArgumentException("Text cannot be null or empty");
         }
         JsonObject body = new JsonObject();
-        body.addProperty("model", "text-embedding-3-small");
+        body.addProperty("model", AppConfig.EMBEDDING_MODEL);
         body.addProperty("input", text);
 
         Request request = new Request.Builder()

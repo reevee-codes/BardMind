@@ -46,6 +46,7 @@ public class RagService implements IRagService {
         store.saveToJson(embeddingsPath.toString());
     }
 
+    /** Returns a RAG context string to prepend to the user message, or empty if no relevant chunks found. */
     public String buildPrompt(String userQuestion) throws IOException {
         if (userQuestion == null || userQuestion.trim().isEmpty()) {
             throw new IllegalArgumentException("User question cannot be null or empty");

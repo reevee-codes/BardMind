@@ -53,6 +53,7 @@ public class VectorStore {
             normA += a.get(i) * a.get(i);
             normB += b.get(i) * b.get(i);
         }
-        return dot / (Math.sqrt(normA) * Math.sqrt(normB));
+        double denominator = Math.sqrt(normA) * Math.sqrt(normB);
+        return denominator == 0 ? 0 : dot / denominator;
     }
 }

@@ -13,7 +13,7 @@ public class BotInitializer {
             botsApi.registerBot(new KaczmarskiBot());
             logger.info("KaczmarskiBot successfully started!");
         } catch (TelegramApiException e) {
-            logger.info("Failed to start handler.KaczmarskiBot:" + e);
+            logger.severe("Failed to start KaczmarskiBot: " + e);
         }
     }
 }

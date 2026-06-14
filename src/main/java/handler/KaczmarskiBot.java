@@ -21,7 +21,7 @@ public class KaczmarskiBot extends TelegramLongPollingBot {
     private static final Logger logger = LoggerFactory.getLogger(KaczmarskiBot.class);
 
     private final MessageHandler messageHandler = new MessageHandler();
-    static Properties configProperties = PropertiesLoader.load("config.properties");
+    private static final Properties configProperties = PropertiesLoader.load("config.properties");
     private static final String BOT_TOKEN = configProperties.getProperty("telegram.bot.token");
     private static final String BOT_USERNAME = configProperties.getProperty("bot.username");
 
