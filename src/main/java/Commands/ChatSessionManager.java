@@ -1,13 +1,13 @@
 package Commands;
 
 import java.util.Set;
-import java.util.HashSet;
+import java.util.concurrent.ConcurrentHashMap;
 
 public class ChatSessionManager {
     private final Set<Long> activeChats;
 
     public ChatSessionManager() {
-        this.activeChats = new HashSet<>();
+        this.activeChats = ConcurrentHashMap.newKeySet();
     }
 
     public boolean isActive(long chatId) {

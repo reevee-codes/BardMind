@@ -20,7 +20,7 @@ public class MessageHandler {
         try {
             commandStorage.executeCommand(bot, messageText, chatId);
         } catch (Exception e) {
-            bot.handleError((TelegramApiException) e);
+            bot.handleError(new TelegramApiException("Unexpected error: " + e.getMessage()));
         }
     }
 

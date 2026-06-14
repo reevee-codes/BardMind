@@ -103,11 +103,8 @@ public class KaczmarskiGPTHandler {
                 messages.add(new ChatMessage("system", formattedPrompt));
             }
 
-            if (!context.isEmpty()) {
-                messages.add(new ChatMessage("system", context));
-            }
-
-            messages.add(new ChatMessage("user", message));
+            String userContent = context.isEmpty() ? message : context + "\n\n" + message;
+            messages.add(new ChatMessage("user", userContent));
 
             ChatCompletionRequest completionRequest = ChatCompletionRequest.builder()
                     .messages(messages)

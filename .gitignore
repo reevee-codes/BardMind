@@ -64,3 +64,5 @@ config.properties
 *.env
 secrets/
 GEMINI.md
+CLAUDE.md
+PLAN.md
