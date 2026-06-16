@@ -46,6 +46,19 @@
                         </configuration>
                     </execution>
                     <execution>
+                        <id>import-wikipedia</id>
+                        <goals><goal>java</goal></goals>
+                        <configuration>
+                            <mainClass>rag.tools.WikipediaImporter</mainClass>
+                            <systemProperties>
+                                <systemProperty>
+                                    <key>bardmind.data</key>
+                                    <value>src/main/resources/data</value>
+                                </systemProperty>
+                            </systemProperties>
+                        </configuration>
+                    </execution>
+                    <execution>
                         <id>generate-embeddings</id>
                         <goals><goal>java</goal></goals>
                         <configuration>

@@ -44,10 +44,13 @@ The file is excluded from git (`.gitignore`).
 ## Running
 
 ```bash
-# 1. Generate embeddings (once, or after adding new .txt files to src/main/resources/data/)
+# 1. (Optional) Download Wikipedia articles about Kaczmarski into data/
+mvn exec:java@import-wikipedia
+
+# 2. Generate embeddings (once, or after adding new .txt files to src/main/resources/data/)
 mvn exec:java@generate-embeddings
 
-# 2. Start the bot
+# 3. Start the bot
 mvn exec:java@run-bot
 ```
 
@@ -57,7 +60,7 @@ By default the bot looks for `embeddings.json` in the working directory. Overrid
 mvn exec:java@run-bot -Dbardmind.embeddings=/path/to/embeddings.json
 ```
 
-## Bot Commands
+## Bot commands
 
 | Command | Description |
 |---------|-------------|
